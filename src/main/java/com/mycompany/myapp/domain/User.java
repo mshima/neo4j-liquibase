@@ -29,7 +29,7 @@ public class User extends AbstractAuditingEntity<String> implements Serializable
 
     @Id
     @GeneratedValue(UUIDStringGenerator.class)
-    @Property("user_id")
+    @Property("id")
     private String id;
 
     @NotNull
@@ -40,6 +40,7 @@ public class User extends AbstractAuditingEntity<String> implements Serializable
     @JsonIgnore
     @NotNull
     @Size(min = 60, max = 60)
+    @Property("password_hash")
     private String password;
 
     @Size(max = 50)
