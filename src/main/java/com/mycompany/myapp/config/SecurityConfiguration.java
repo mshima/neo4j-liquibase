@@ -1,6 +1,7 @@
 package com.mycompany.myapp.config;
 
 import com.mycompany.myapp.security.*;
+import com.mycompany.myapp.web.filter.SpaWebFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -14,6 +15,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.server.resource.web.BearerTokenAuthenticationEntryPoint;
 import org.springframework.security.oauth2.server.resource.web.access.BearerTokenAccessDeniedHandler;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.security.web.header.writers.ReferrerPolicyHeaderWriter;
 import tech.jhipster.config.JHipsterProperties;
 
 @Configuration
@@ -36,9 +39,27 @@ public class SecurityConfiguration {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
             .csrf(csrf -> csrf.disable())
+            .addFilterAfter(new SpaWebFilter(), BasicAuthenticationFilter.class)
+            .headers(headers ->
+                headers
+                    .contentSecurityPolicy(csp -> csp.policyDirectives(jHipsterProperties.getSecurity().getContentSecurityPolicy()))
+                    .frameOptions(frameOptions -> frameOptions.sameOrigin())
+                    .referrerPolicy(referrer -> referrer.policy(ReferrerPolicyHeaderWriter.ReferrerPolicy.STRICT_ORIGIN_WHEN_CROSS_ORIGIN))
+                    .permissionsPolicy(permissions ->
+                        permissions.policy(
+                            "camera=(), fullscreen=(self), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), midi=(), payment=(), sync-xhr=()"
+                        )
+                    )
+            )
             .authorizeHttpRequests(authz ->
                 // prettier-ignore
                 authz
+                    .requestMatchers("/", "/index.html", "/*.js", "/*.map", "/*.css").permitAll()
+                    .requestMatchers("/*.ico", "/*.png", "/*.svg", "/*.webapp").permitAll()
+                    .requestMatchers("/app/**").permitAll()
+                    .requestMatchers("/i18n/**").permitAll()
+                    .requestMatchers("/content/**").permitAll()
+                    .requestMatchers("/swagger-ui/**").permitAll()
                     .requestMatchers(HttpMethod.POST, "/api/authenticate").permitAll()
                     .requestMatchers(HttpMethod.GET, "/api/authenticate").permitAll()
                     .requestMatchers("/api/register").permitAll()
