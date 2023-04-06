@@ -32,7 +32,7 @@
             <column name="email" type="string"/>
             <column name="image_url" type="string"/>
             <column name="activated" type="boolean"/>
-            <column name="lang_key" type="boolean"/>
+            <column name="lang_key" type="string"/>
             <column name="created_by" type="string"/>
             <column name="last_modified_by" type="string"/>
         </loadData>
