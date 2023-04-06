@@ -21,6 +21,12 @@ logging:
     com.mycompany.myapp: DEBUG
     org.neo4j.driver: WARN
 
+org:
+  neo4j:
+    migrations:
+      locations-to-scan:
+      packages-to-scan: com.mycompany.myapp.config.neo4j
+      installed-by: neo4j-liquibase
 spring:
   devtools:
     restart:
@@ -39,9 +45,6 @@ spring:
     # authentication:
     #   username: neo4j
     #   password: secret
-  liquibase:
-    # Remove 'faker' if you do not want the sample data to be loaded automatically
-    contexts: dev, faker
   mail:
     host: localhost
     port: 25

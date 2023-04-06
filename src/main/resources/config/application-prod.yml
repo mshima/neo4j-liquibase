@@ -25,6 +25,10 @@ org:
     driver:
       pool:
         metrics-enabled: true
+    migrations:
+      locations-to-scan:
+      packages-to-scan: com.mycompany.myapp.config.neo4j
+      installed-by: neo4j-liquibase
 management:
   prometheus:
     metrics:
@@ -45,9 +49,6 @@ spring:
     # authentication:
     #   username: neo4j
     #   password: secret
-  # Replace by 'prod, faker' to add the faker context and have sample data loaded in production
-  liquibase:
-    contexts: prod
   mail:
     host: localhost
     port: 25
